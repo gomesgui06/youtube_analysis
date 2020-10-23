@@ -42,9 +42,14 @@ def get_video_comment(video):
         wait = WebDriverWait(driver,50)
         driver.get(video)
 
+        
         for item in range(5): 
             wait.until(EC.visibility_of_element_located((By.TAG_NAME, "body"))).send_keys(Keys.END)
+            driver.execute_script("window.scrollTo(0, 300);")
             time.sleep(15)
+            #driver.execute_script("window.scrollTo(0, 200);")
+            #print(last_height)
+
         
         
         for comment in wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#content-text"))):

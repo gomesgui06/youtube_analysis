@@ -20,15 +20,14 @@ from youtube_crawler import youtube_crawler
 
 
 def main():
-    folder = 'lion_bbq'
-    # data = youtube_crawler(url_channel, folder)
-    # url_channel = 'https://www.youtube.com/c/LionBBQ/videos'
- 
-    data = pd.read_csv(f'datalake/raw/{folder}/data_full_{folder}.csv')
-    data = data[['comment', 'author', 'video_title']]
     column_text = 'comment'
+    folder = 'lion_bbq'
+    url_channel = 'https://www.youtube.com/c/LionBBQ/videos'
+    # data = youtube_crawler(url_channel, folder)
+    data = pd.read_csv(f'datalake/raw/{folder}/data_full_{folder}.csv')
+    data = data[['video_title', 'comment', 'author']]    
     df = preprocessor(data, folder, column_text)
-    print(df.head())
+    
 
 if __name__ == '__main__':
     main()

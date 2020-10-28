@@ -87,6 +87,7 @@ def concat_df(lista):
 
     for l in lista:
         dataframe = pd.read_csv(f'datalake/raw/lion_bbq/{l}.csv')
+        dataframe['video_title'] = l
         dfs.append(dataframe)
     
     df = pd.concat(dfs, ignore_index=True)
@@ -110,7 +111,7 @@ def youtube_crawler(url_channel, folder):
         df_coments.to_csv(f'datalake/raw/{folder}/coments_of_{name_video_list[count]}.csv')
         count = count+1    
 
-    dataframe_youtube_video = pd.read_csv('datalake/raw/{folder}/youtube_videos.csv')
+    dataframe_youtube_video = pd.read_csv(f'datalake/raw/{folder}/youtube_videos.csv')
     lista = video_list(dataframe_youtube_video['video_title'])
     data = concat_df(lista)
     data.to_csv(f'datalake/raw/{folder}/data_full_{folder}.csv')

@@ -1,2 +1,4 @@
 *.csv
 datalake/
+notebook/*.csv
+notebook/*.ipynb

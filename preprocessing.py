@@ -12,7 +12,7 @@ nltk.download('wordnet')
 
 def clean_function(df, column_text):
     df[f'{column_text}_cleaned'] =  df[[f'{column_text}']]\
-            .replace(regex=r'[!/,.?-]',value='')\
+            .replace(regex=r'[!/,.-]',value='')\
             .apply(lambda x: x.astype(str).str.lower())\
             .apply(lambda x: x.astype(str).str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8'))
     

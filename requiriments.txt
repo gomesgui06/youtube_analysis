@@ -1,3 +1,4 @@
 pandas
 nltk
 selenium
+numpy

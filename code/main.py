@@ -1,9 +1,10 @@
 import pandas as pd  
 from preprocessing import preprocessor
-from youtube_crawler import youtube_crawler
+from youtube_crawler import youtube_crawler, get_url_video
 
 
 def main():
+    """
     column_text = 'comment'
     folder = 'lion_bbq'
     url_channel = 'https://www.youtube.com/c/LionBBQ/videos'
@@ -11,6 +12,10 @@ def main():
     data = pd.read_csv(f'datalake/raw/{folder}/data_full_{folder}.csv')
     data = data[['video_title', 'comment', 'author']]    
     df = preprocessor(data, folder, column_text)
+    """
+    url_channel = 'https://www.youtube.com/c/LionBBQ/videos'
+    df = get_url_video(url_channel)
+    print(df.head())
 
 
 if __name__ == '__main__':

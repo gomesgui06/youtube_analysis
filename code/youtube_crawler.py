@@ -5,12 +5,37 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd 
+from selenium import webdriver
 
 
 def get_url_video(url_channel):
     urls = []
     video_titles = []
 
+    driver = webdriver.Remote(
+        command_executor='http://127.0.0.1:4444/wd/hub',
+        desired_capabilities={'browserName': 'firefox', 'javascriptEnabled': True})
+    
+    wait = WebDriverWait(driver,50)
+    driver.get(url_channel)
+
+    for item in range(10): 
+        wait.until(EC.visibility_of_element_located((By.TAG_NAME, "body"))).send_keys(Keys.END)
+        time.sleep(15)
+
+
+    for video_title in wait.until(EC.presence_of_all_elements_located((By.ID, "video-title"))):
+        video_titles.append(video_title.text)
+        print(f'Título do vídeo: {video_title.text}')
+        
+
+    for url in driver.find_elements_by_css_selector("#video-title"):
+        urls.append(url.get_attribute('href'))
+        print(f'URL: {url.get_attribute("href")}')      
+
+    df = pd.DataFrame(video_titles, columns=['video_title'])
+    df['url'] = urls   
+    """
     with Chrome('/home/guilherme.gomes/chromedriver') as driver:
         wait = WebDriverWait(driver,50)
         driver.get(url_channel)
@@ -31,7 +56,7 @@ def get_url_video(url_channel):
         
         df = pd.DataFrame(video_titles, columns=['video_title'])
         df['url'] = urls     
-
+    """
     return (df)
 
 def get_video_comment(video):

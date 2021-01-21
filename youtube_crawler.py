@@ -63,8 +63,6 @@ def get_video_comment(video):
             authors.append(author.text)
             print(f'Autor: {author.text}')
 
-
-        
         df = pd.DataFrame(comments, columns=['comment'])
         df['author'] = authors
 

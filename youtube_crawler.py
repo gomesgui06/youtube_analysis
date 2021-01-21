@@ -45,7 +45,7 @@ def get_video_comment(video):
         driver.get(video)
 
         count = 0 
-        for item in range(15): 
+        for item in range(5): 
             wait.until(EC.visibility_of_element_located((By.TAG_NAME, "body"))).send_keys(Keys.END)
             if count == 0:
                 driver.execute_script("window.scrollTo(0, 400);")
@@ -81,14 +81,14 @@ def video_list(df):
     
     return lista
 
-def concat_df(lista):
+def concat_df(lista, folder):
     print('Função data_full')
     print(lista)
     print(type(lista))
     dfs = []
 
     for l in lista:
-        dataframe = pd.read_csv(f'datalake/raw/lion_bbq/{l}.csv')
+        dataframe = pd.read_csv(f'datalake/raw/{folder}/{l}.csv')
         dataframe['video_title'] = l
         dfs.append(dataframe)
     
@@ -100,15 +100,22 @@ def youtube_crawler(url_channel, folder):
 
     print(f'ETAPA 01 - Processando canal: {folder}')
     df_youtube_videos = get_url_video(url_channel)
+    
     print(f'ETAPA 02 - Coletando vídeos do canal')
     print(f'Dataframe de vídeos: {df_youtube_videos.head()}')
     df_youtube_videos.to_csv(f'datalake/raw/{folder}/youtube_videos.csv', index=False)
+    
+    print('ETAPA 03 - Coletando vídeos já processados')
+    df_videos_processados = pd.read_csv(f'datalake/raw/{folder}/videos_processados.csv')
+    lista_videos_processados = df_videos_processados.videos_processados.tolist()
 
-    # df_youtube_videos = pd.read_csv(f'datalake/raw/{folder}/youtube_videos.csv')
+    print('ETAPA 04 - Montando lista de vídeos para serem processados')
     youtube_video_list = df_youtube_videos.url.tolist()
+    youtube_video_list = youtube_video_list - lista_videos_processados
     name_video_list = df_youtube_videos.video_title.tolist()
     videos_processados = []
 
+    print('ETAPA 05 - Coleta dos comentários dos vídeos listados')
     count = 0 
     for youtube_video in youtube_video_list[:5]:
         
@@ -120,9 +127,10 @@ def youtube_crawler(url_channel, folder):
         df_videos_processados = pd.DataFrame(videos_processados, columns=['videos_processados'])
         df_videos_processados.to_csv(f'datalake/raw/{folder}/videos_processados.csv', index=False)
 
+    print('ETAPA 06 - Montagaem dataframe full')
     dataframe_youtube_video = pd.read_csv(f'datalake/raw/{folder}/youtube_videos.csv')
     lista = video_list(dataframe_youtube_video['video_title'])
-    data = concat_df(lista)
+    data = concat_df(lista, folder)
     data.to_csv(f'datalake/raw/{folder}/data_full_{folder}.csv')
     return data
 

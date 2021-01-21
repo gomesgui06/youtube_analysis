@@ -2,3 +2,4 @@
 datalake/
 notebook/*.csv
 notebook/*.ipynb
+venv/

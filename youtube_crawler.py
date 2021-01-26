@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd 
 from selenium import webdriver
 
+chrome_driver = '/home/guilherme.gomes/chromedriver'
 
 def get_url_video(url_channel):
     """
@@ -19,7 +20,7 @@ def get_url_video(url_channel):
     urls = []
     video_titles = []
 
-    with Chrome('/home/guilherme.gomes/chromedriver') as driver:
+    with Chrome(chrome_driver) as driver:
         wait = WebDriverWait(driver,50)
         driver.get(url_channel)
 
@@ -57,7 +58,7 @@ def get_video_comment(video):
     comments=[]
     authors = []
 
-    with Chrome('/home/guilherme.gomes/chromedriver') as driver:
+    with Chrome(chrome_driver) as driver:
         wait = WebDriverWait(driver,50)
         driver.get(video)
 

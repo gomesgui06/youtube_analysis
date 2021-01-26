@@ -9,6 +9,13 @@ from selenium import webdriver
 
 
 def get_url_video(url_channel):
+    """
+    Método que acessa a URL do canal e retorna um DataFrame com o título do vídeo e a URL
+
+    Parametros: url_channel
+
+    Retorno: DataFrame com URL do vídeo e título
+    """
     urls = []
     video_titles = []
 
@@ -40,6 +47,13 @@ def get_url_video(url_channel):
     return (df)
 
 def get_video_comment(video):
+    """
+    Método que acessa um vídeo e coleta os comentários
+
+    Parametros: url_vídeo
+
+    Retorno: DataFrame com autor e comentário
+    """
     comments=[]
     authors = []
 
@@ -75,6 +89,13 @@ def get_video_comment(video):
     return df
 
 def video_list(df):
+    """
+    Método que retorna uma lista a partir de uma dataframe adicionando 'coments_of'
+
+    Parametros: DataFrame
+
+    Retorno: Lista
+    """
     
     videos_title = df.to_list()
     lista =[]
@@ -85,6 +106,13 @@ def video_list(df):
     return lista
 
 def concat_df(lista, folder):
+    """
+    Método que concatena todos os .csv de um canal e transforma em um único arquivo
+
+    Parametros: lista de vídeos e nome da pasta
+
+    Retorno: DataFrame com os dados concatenados
+    """
     print('Função data_full')
     print(lista)
     print(type(lista))
@@ -100,11 +128,29 @@ def concat_df(lista, folder):
     return df
 
 def diff_videos_process(df_videos_processados, df_videos_para_processar):
+    """
+    Método que faz a diferença entre os vídeos que foram processados e os vídeos disponíveis no canal
+
+    Parametros: DataFrame de vídeos processados e DataFrame de vídeos para processar
+
+    Retorno: DataFrame com os vídeos que não foram processados
+    """
     df = pd.concat([df_videos_processados, df_videos_para_processar]).drop_duplicates(keep=False)    
     return df
 
 
-def youtube_crawler(url_channel, folder):
+def processor_youtube_crawler(url_channel, folder):
+    """
+    Método que faz todo o processo do Crawler:
+    1 - Coleta os vídeos do canal
+    2 - Identifica o que não foi processado
+    3 - Processa os vídeos não processados
+    4 - Concatena os comentários em um único arquivo
+
+    Parametros: URL do canal, pasta 
+
+    Retorno: DataFrame com todos os comentários
+    """
 
     print(f'ETAPA 01 - Coletando vídeos do canal: {folder}')
     df_youtube_videos = get_url_video(url_channel)

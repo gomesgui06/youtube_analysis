@@ -12,7 +12,8 @@ def main():
     # url_channel = 'https://www.youtube.com/c/S%C3%93VIDE/videos'
     # folder = 'so_vide'
     
-    df = processor_youtube_crawler(url_channel, folder)
+    # df = processor_youtube_crawler(url_channel, folder)
+    df = pd.read_csv(f'datalake/raw/{folder}/data_full_so_vide.csv')
     preprocessor(df, folder, 'comment')
     
 if __name__ == '__main__':

@@ -20,6 +20,7 @@ def clean_function(df, column_text):
     """
     df[f'{column_text}_cleaned'] =  df[[f'{column_text}']]\
             .replace(regex=r'[!/,.-]',value='')\
+            .replace(to_replace=r"\b((?:k)+?|(?:l+o+)+l?|(?:h+a)+?|(?:h+e)+)\b", value='', regex=True)\
             .apply(lambda x: x.astype(str).str.lower())\
             .apply(lambda x: x.astype(str).str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8'))
     

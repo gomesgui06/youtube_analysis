@@ -30,3 +30,10 @@ if not os.path.exists(path_model):
 else:
     shutil.rmtree(path_model)           
     os.makedirs(path_model)
+
+path_notebook = f'datalake/notebook/{canal}'
+if not os.path.exists(path_notebook):
+    os.makedirs(path_notebook)
+else:
+    shutil.rmtree(path_notebook)           
+    os.makedirs(path_notebook)

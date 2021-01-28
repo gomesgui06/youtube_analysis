@@ -1,5 +1,5 @@
 *.csv
 datalake/
 notebook/*.csv
-notebook/*.ipynb
+notebook/
 venv/

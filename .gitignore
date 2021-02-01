@@ -1,0 +1,5 @@
+*.csv
+datalake/
+notebook/*.csv
+notebook/
+venv/

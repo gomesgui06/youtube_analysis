@@ -3,3 +3,4 @@ datalake/
 notebook/*.csv
 notebook/
 venv/
+.venv

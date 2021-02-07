@@ -2,3 +2,6 @@ pandas
 nltk
 selenium
 numpy
+sqlalchemy
+sqlalchemy-utils
+

@@ -2,6 +2,8 @@ import pandas as pd
 import sys 
 from preprocessing import preprocessor
 from youtube_crawler import processor_youtube_crawler
+from database_save import save_postgres
+
 
 variaveis = sys.argv
 
@@ -13,8 +15,13 @@ def main():
     # folder = 'so_vide'
     
     # df = processor_youtube_crawler(url_channel, folder)
-    df = pd.read_csv(f'datalake/raw/{folder}/data_full_so_vide.csv')
-    preprocessor(df, folder, 'comment')
+    # preprocessor(df, folder, 'comment')
+    
+    df = pd.read_csv(f'datalake/refined/{folder}/data_full_so_vide_classified.csv')
+
+    con = 'postgres://postgres:docker@localhost:5432'
+    save_postgres(df, con, folder)
+
     
 if __name__ == '__main__':
     main()

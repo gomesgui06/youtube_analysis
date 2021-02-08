@@ -4,3 +4,4 @@ notebook/*.csv
 notebook/
 venv/
 .venv
+config/*.env

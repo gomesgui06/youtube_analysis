@@ -35,9 +35,17 @@ Este projeto tem como objetivo capturar comentários de vídeos do YouTube e ana
 ## comandos:
     install requirements: `python3 -m pip install -r requirements.txt`
     
-    run postgres: docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres
+    run postgres: 
+        docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres
 
-    postgres: \l (lista de metabase)
-              \c {nome_do_metabase} (Para entrar no metabase)
-              \dt+ (lista as tabelas que existem dentro do metabase)
+    postgres: 
+        \l (lista de metabase)
+        \c {nome_do_metabase} (Para entrar no metabase)
+        \dt+ (lista as tabelas que existem dentro do metabase)
+        \du (lista usuários)
 
+    Entrar no terminal do container docker: 
+        docker exec -it ID_DO_CONTAINER bash
+    
+    Abrir o postgres: 
+        psql -h localhost -U postgres -d postgres

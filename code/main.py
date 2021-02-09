@@ -17,10 +17,10 @@ def main():
     # df = processor_youtube_crawler(url_channel, folder)
     # preprocessor(df, folder, 'comment')
     
-    df = pd.read_csv(f'datalake/refined/{folder}/data_full_so_vide_classified.csv')
+    df = pd.read_csv(f'/home/gomes/estudo/youtube_analysis/datalake/refined/{folder}/data_full_so_vide_classified.csv')
 
-    con = 'postgres://postgres:docker@localhost:5432'
-    save_postgres(df, con, folder)
+    con = 'postgres://metabase:docker@localhost:5432'
+    save_postgres(df, con, folder, 'classified')
 
     
 if __name__ == '__main__':

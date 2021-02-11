@@ -19,7 +19,7 @@ def main():
     
     df = pd.read_csv(f'/home/gomes/estudo/youtube_analysis/datalake/refined/{folder}/data_full_so_vide_classified.csv')
 
-    con = 'postgres://metabase:docker@localhost:5432'
+    con = 'postgres://metabase:postgres@localhost:5432'
     save_postgres(df, con, folder, 'classified')
 
     

@@ -5,6 +5,8 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import SnowballStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
+from database_save import save_gbq
+
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
@@ -72,7 +74,7 @@ def lematization (df, column_name, new_column_name):
     df[new_column_name] = df[column_name].map(lambda x: [lemmatizer.lemmatize(y) for y in x])
     return df
 
-def preprocessor (df, folder, column_name):
+def preprocessor (df, folder, column_name, json_key):
     """
     Método que faz todas as etapas de limpeza:
     1 - clean function
@@ -90,4 +92,6 @@ def preprocessor (df, folder, column_name):
     data = stemming(data, f'{column_name}_tokenized', f'{column_name}_stemming')
     data = lematization(data, f'{column_name}_tokenized', f'{column_name}_lematized')
     data.to_csv(f'datalake/refined/{folder}/data_full_{folder}.csv')
+    save_gbq(data, folder, 'preprocessed_data', json_key)
+
     return data

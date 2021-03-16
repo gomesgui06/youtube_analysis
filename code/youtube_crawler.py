@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd 
 from selenium import webdriver
+from database_save import save_gbq
+
 
 chrome_driver = '/home/guilherme.gomes/chromedriver'
 
@@ -140,7 +142,7 @@ def diff_videos_process(df_videos_processados, df_videos_para_processar):
     return df
 
 
-def processor_youtube_crawler(url_channel, folder):
+def processor_youtube_crawler(url_channel, folder, json_key):
     """
     Método que faz todo o processo do Crawler:
     1 - Coleta os vídeos do canal
@@ -181,6 +183,7 @@ def processor_youtube_crawler(url_channel, folder):
     print(f'ETAPA 05 - Atualizando lista de vídeos processados')
     df_final = pd.concat([df, df_video_processados])
     df_final.to_csv(f'datalake/raw/{folder}/videos_processados.csv', index=False)
+    save_gbq(df_final, folder, 'processed_videos', json_key)
 
     
     print('ETAPA 06 - Montagaem dataframe full')
@@ -188,4 +191,6 @@ def processor_youtube_crawler(url_channel, folder):
     lista = video_list(dataframe_youtube_video['video_title'])
     data = concat_df(lista, folder)
     data.to_csv(f'datalake/raw/{folder}/data_full_{folder}.csv', index=False)
+    save_gbq(data, folder, 'raw_data', json_key)
+
     return data

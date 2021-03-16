@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  pgsql-metabase-docker:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      # Senha para o banco.
+      POSTGRES_PASSWORD: postgres
+      # Usuário
+      POSTGRES_USER: metabase
+      #Nome do Banco
+      POSTGRES_DB: metabase
+    volumes:
+      - /HOME/docker/volumes/postgres:/var/lib/postgresql/data
+
+  metabase-docker:
+    image: metabase/metabase
+    restart: always
+    ports:
+      - 3002:3000
+    volumes:
+      - /HOME/docker/volumes/metabase-data:/metabase-data
+    environment:
+      # Nome do tipo de Banco.
+      MB_DB_TYPE: postgres   
+      # Nome do Banco.
+      MB_DB_DBNAME: metabase  
+      # Porta de Conexão.
+      MB_DB_PORT: 5432  
+      #  Nome do Usuário a se conectar no Banco.
+      MB_DB_USER: metabase  
+      # Nome da senha do Usuário.
+      MB_DB_PASS: postgres  
+      # Nome do Host de conexão.
+      MB_DB_HOST: pgsql-metabase-docker 
+    depends_on:
+      - pgsql-metabase-docker
+    links:
+      - pgsql-metabase-docker

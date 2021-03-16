@@ -4,4 +4,4 @@ selenium
 numpy
 sqlalchemy
 sqlalchemy-utils
-
+pandas-gbq

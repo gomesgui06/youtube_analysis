@@ -1,27 +1,42 @@
-import pandas as pd 
 import sys 
+import os
+
+import pandas as pd 
+from configparser import RawConfigParser
+
 from preprocessing import preprocessor
 from youtube_crawler import processor_youtube_crawler
-from database_save import save_postgres
+from database_save import save_gbq
+from model import classification_model
 
+
+
+config = RawConfigParser()
+thisfolder = os.path.dirname(os.path.abspath( __file__ ))
+initfile = os.path.join(thisfolder , 'config.cfg')
+config.read(initfile)
 
 variaveis = sys.argv
+json_key_name = config.get('bigquery' , 'bigquery_key_json_name')
+json_key_path = config.get('bigquery' , 'bigquery_key_json_local_path')
 
 def main():
-    folder = variaveis[1]
+    channel_name = variaveis[1]
     url_channel = variaveis[2]
     
     # url_channel = 'https://www.youtube.com/c/S%C3%93VIDE/videos'
-    # folder = 'so_vide'
-    
-    # df = processor_youtube_crawler(url_channel, folder)
-    # preprocessor(df, folder, 'comment')
-    
-    df = pd.read_csv(f'/home/gomes/estudo/youtube_analysis/datalake/refined/{folder}/data_full_so_vide_classified.csv')
+    # channel_name = 'lion_bbq'
 
-    con = 'postgres://metabase:postgres@localhost:5432'
-    save_postgres(df, con, folder, 'classified')
-
+    json_key = f'{json_key_path}{json_key_name}'
+    
+    df_raw = processor_youtube_crawler(url_channel, channel_name, json_key)
+    
+    df_preprocessed = preprocessor(df_raw, channel_name, 'comment', json_key)
+    
+    df_classified = classification_model(df_preprocessed, 
+                                         channel_name,
+                                         'comment_lematized', 
+                                         json_key)
     
 if __name__ == '__main__':
     main()

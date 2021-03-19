@@ -6,10 +6,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd 
 from selenium import webdriver
-from database_save import save_gbq
 
 
-chrome_driver = '/home/guilherme.gomes/chromedriver'
+chrome_driver = '/home/gomes/chromedriver'
 
 def get_url_video(url_channel):
     """
@@ -26,7 +25,7 @@ def get_url_video(url_channel):
         wait = WebDriverWait(driver,50)
         driver.get(url_channel)
 
-        for item in range(10): 
+        for item in range(30): 
             wait.until(EC.visibility_of_element_located((By.TAG_NAME, "body"))).send_keys(Keys.END)
             time.sleep(15)
 
@@ -142,7 +141,7 @@ def diff_videos_process(df_videos_processados, df_videos_para_processar):
     return df
 
 
-def processor_youtube_crawler(url_channel, folder, json_key):
+def processor_youtube_crawler(url_channel, folder):
     """
     Método que faz todo o processo do Crawler:
     1 - Coleta os vídeos do canal
@@ -154,20 +153,26 @@ def processor_youtube_crawler(url_channel, folder, json_key):
 
     Retorno: DataFrame com todos os comentários
     """
-
+    path = '/home/gomes/estudo/youtube_analysis'
+    
+    
     print(f'ETAPA 01 - Coletando vídeos do canal: {folder}')
     df_youtube_videos = get_url_video(url_channel)
-    df_youtube_videos.to_csv(f'datalake/raw/{folder}/youtube_videos.csv', index=False)
-
+    print(df_youtube_videos.shape)
+    print(df_youtube_videos.size)
+    df_youtube_videos.to_csv(f'{path}/datalake/raw/{folder}/youtube_videos.csv', index=False)
+    
 
     print(f'ETAPA 02 - Identificando vídeos que não foram processados')
-    df_video_processados = pd.read_csv(f'datalake/raw/{folder}/videos_processados.csv')
+    df_video_processados = pd.read_csv(f'{path}/datalake/raw/{folder}/videos_processados.csv')
+    df_youtube_videos = pd.read_csv(f'{path}/datalake/raw/{folder}/youtube_videos.csv')
     df = diff_videos_process(df_youtube_videos, df_video_processados)
 
 
     print('ETAPA 03 - Montando lista de vídeos para serem processados')
     youtube_video_list = df.url.tolist()
     name_video_list = df.video_title.tolist()
+    print(name_video_list)
 
 
     print('ETAPA 04 - Coleta dos comentários dos vídeos listados')
@@ -176,21 +181,21 @@ def processor_youtube_crawler(url_channel, folder, json_key):
         
         print(f'{count} - vídeo: {youtube_video}')
         df_coments = get_video_comment(video=youtube_video)
-        df_coments.to_csv(f'datalake/raw/{folder}/coments_of_{name_video_list[count]}.csv', index=False)
+        df_coments.to_csv(f'{path}/datalake/raw/{folder}/coments_of_{name_video_list[count]}.csv', index=False)
         count = count+1
 
 
     print(f'ETAPA 05 - Atualizando lista de vídeos processados')
     df_final = pd.concat([df, df_video_processados])
-    df_final.to_csv(f'datalake/raw/{folder}/videos_processados.csv', index=False)
-    save_gbq(df_final, folder, 'processed_videos', json_key)
+    print(df_final.head())
+    print(df_final.size)
+    df_final.to_csv(f'{path}/datalake/raw/{folder}/videos_processados.csv', index=False)
 
     
     print('ETAPA 06 - Montagaem dataframe full')
     dataframe_youtube_video = pd.read_csv(f'datalake/raw/{folder}/videos_processados.csv')
     lista = video_list(dataframe_youtube_video['video_title'])
     data = concat_df(lista, folder)
-    data.to_csv(f'datalake/raw/{folder}/data_full_{folder}.csv', index=False)
-    save_gbq(data, folder, 'raw_data', json_key)
+    data.to_csv(f'{path}/datalake/raw/{folder}/data_full_{folder}.csv', index=False)
 
     return data
